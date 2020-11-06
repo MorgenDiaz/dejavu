@@ -2,6 +2,7 @@ package com.webslinger.dejavu.application.viewmodel
 
 import androidx.lifecycle.ViewModel
 
-class MainViewModel : ViewModel() {
+class SelectBeforePictureViewModel : ViewModel() {
     // TODO: Implement the ViewModel
+
 }

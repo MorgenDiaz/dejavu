@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Dejavu</string>
+    <string name="select_before_picture_prompt">Please select a before picture</string>
+    <string name="select_before_picture">Select picture from gallery</string>
 </resources>
