@@ -10,4 +10,9 @@
         android:name="com.webslinger.dejavu.presentation.main.SelectBeforePictureFragment"
         android:label="select_before_picture_fragment"
         tools:layout="@layout/select_before_picture_fragment" />
+    <fragment
+        android:id="@+id/takeAfterPictureFragment"
+        android:name="com.webslinger.dejavu.presentation.main.TakeAfterPictureFragment"
+        android:label="take_after_picture_fragment"
+        tools:layout="@layout/take_after_picture_fragment" />
 </navigation>

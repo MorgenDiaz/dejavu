@@ -37,6 +37,7 @@ android {
 }
 
 def lifecycle_version = "2.2.0"
+def glide_version = "4.11.0"
 
 dependencies {
 
@@ -49,7 +50,13 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
+    implementation 'androidx.fragment:fragment-ktx:1.3.0-beta01'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    //Glide Version
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
