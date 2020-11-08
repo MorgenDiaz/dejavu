@@ -1,5 +1,6 @@
 package com.webslinger.dejavu.presentation.main
 
+
 import android.net.Uri
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -39,6 +40,7 @@ class TakeAfterPictureFragment : Fragment() {
 
         dataBinding.beforePictureOverlay.imageAlpha = 30
     }
+
 
     companion object {
         fun newInstance() = TakeAfterPictureFragment()
