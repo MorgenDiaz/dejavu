@@ -25,17 +25,18 @@ import java.util.concurrent.Executor
 
 class DefaultCamera(
     private val cameraProviderFuture: ListenableFuture<ProcessCameraProvider>,
-    private val previewSurface: Preview.SurfaceProvider,
     private val previewConfiguration: IPreviewConfiguration,
     private val imageCaptureConfiguration: IImageCaptureConfiguration,
-    private val lifeCycleOwner: LifecycleOwner
 ): ICamera {
     private val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
     private var imageCapture: ImageCapture = imageCaptureConfiguration.configure()
-    private val preview = previewConfiguration.configure(previewSurface)
     private val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-    override fun start(executor: Executor) {
+    override fun start(
+        executor: Executor,
+        lifeCycleOwner: LifecycleOwner,
+        previewSurface: Preview.SurfaceProvider
+    ) {
         cameraProviderFuture.addListener(Runnable {
             try {
                 // Unbind use cases before rebinding
@@ -45,7 +46,7 @@ class DefaultCamera(
                 cameraProvider.bindToLifecycle(
                     lifeCycleOwner,
                     cameraSelector,
-                    preview,
+                    previewConfiguration.configure(previewSurface),
                     imageCapture
                 )
 

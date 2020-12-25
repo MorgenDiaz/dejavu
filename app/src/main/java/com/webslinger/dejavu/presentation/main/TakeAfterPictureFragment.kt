@@ -24,11 +24,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.webslinger.dejavu.R
+import com.webslinger.dejavu.application.DejavuApplication
 import com.webslinger.dejavu.application.infrastructure.camera.DefaultCamera
 import com.webslinger.dejavu.application.infrastructure.camera.DefaultImageCaptureConfiguration
 import com.webslinger.dejavu.application.infrastructure.camera.DefaultPreviewConfiguration
+import com.webslinger.dejavu.application.usecase.TakePictureUseCase
 import com.webslinger.dejavu.application.viewmodel.TakeAfterPictureViewModel
 import com.webslinger.dejavu.databinding.TakeAfterPictureFragmentBinding
+import com.webslinger.dejavu.domain.ICamera
 import timber.log.Timber
 import java.io.File
 import java.text.SimpleDateFormat
@@ -45,15 +48,18 @@ class TakeAfterPictureFragment : Fragment() {
 
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
-    private val camera: DefaultCamera by lazy {
-        DefaultCamera(
-            ProcessCameraProvider.getInstance(requireContext()),
-            dataBinding.viewFinder.surfaceProvider,
-            DefaultPreviewConfiguration(),
-            DefaultImageCaptureConfiguration(),
-            this
-        )
-    }
+
+    /*additional camera setup
+    * dataBinding.viewFinder.surfaceProvider,
+    * this
+    * */
+    private lateinit var camera: ICamera
+    /*DefaultCamera(
+               ProcessCameraProvider.getInstance(requireContext()),
+               DefaultPreviewConfiguration(),
+               DefaultImageCaptureConfiguration(),
+           )*/
+    private lateinit var takePictureUseCase: TakePictureUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,10 +74,13 @@ class TakeAfterPictureFragment : Fragment() {
         return dataBinding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(TakeAfterPictureViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val applicationComponent = (requireActivity().application as DejavuApplication).applicationComponent
+        camera = applicationComponent.getCamera()
+
+        viewModel = ViewModelProvider(this, applicationComponent.getTakeAfterPictureViewModelFactory()).get(TakeAfterPictureViewModel::class.java)
+
         arguments?.let {
             val beforePictureUri: Uri = it.get("BEFORE_PICTURE_PATH") as Uri
             Glide.with(this)
@@ -82,7 +91,11 @@ class TakeAfterPictureFragment : Fragment() {
         dataBinding.beforePictureOverlay.imageAlpha = 50
 
         if (allPermissionsGranted()) {
-            camera.start(ContextCompat.getMainExecutor(requireContext()))
+            camera.start(ContextCompat.getMainExecutor(
+                requireContext()),
+                this,
+                dataBinding.viewFinder.surfaceProvider
+            )
         } else {
             ActivityCompat.requestPermissions(
                 requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
@@ -91,34 +104,19 @@ class TakeAfterPictureFragment : Fragment() {
 
         // Set up the listener for take photo button
         dataBinding.cameraCaptureButton.setOnClickListener {
-            val photoFile = File(
-                outputDirectory,
-                SimpleDateFormat(FILENAME_FORMAT, Locale.US
-                ).format(System.currentTimeMillis()) + ".jpg")
-
-            camera.takePhoto(
-                ImageCapture.OutputFileOptions.Builder(photoFile).build(),
-                ContextCompat.getMainExecutor(requireContext()),
-                object : ImageCapture.OnImageSavedCallback {
-                    override fun onError(exc: ImageCaptureException) {
-                        Timber.e(exc, "Photo capture failed: ${exc.message}")
-
-                    }
-
-                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                        val savedUri = Uri.fromFile(photoFile)
-                        MediaScannerConnection.scanFile(requireContext(), arrayOf(photoFile.path), arrayOf("image/jpeg" ), null)
-                        val msg = "Photo capture succeeded: $savedUri"
-                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                        Timber.d(msg)
-                    }
-                }
-            )
+            outputDirectory = getOutputDirectory()
+            viewModel.takeAfterPicture(camera, outputDirectory)
         }
 
-        outputDirectory = getOutputDirectory()
-
         cameraExecutor = Executors.newSingleThreadExecutor()
+    }
+
+    private fun getOutputDirectory(): File {
+        val mediaDir = requireContext().externalMediaDirs.firstOrNull()?.let {
+            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
+        }
+        return if (mediaDir != null && mediaDir.exists())
+            mediaDir else requireContext().filesDir
     }
 
     override fun onRequestPermissionsResult(
@@ -127,7 +125,11 @@ class TakeAfterPictureFragment : Fragment() {
     ) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
-                camera.start(ContextCompat.getMainExecutor(requireContext()))
+                camera.start(ContextCompat.getMainExecutor(
+                    requireContext()),
+                    this,
+                    dataBinding.viewFinder.surfaceProvider
+                )
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -145,13 +147,7 @@ class TakeAfterPictureFragment : Fragment() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun getOutputDirectory(): File {
-        val mediaDir = requireContext().externalMediaDirs.firstOrNull()?.let {
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
-        }
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else requireContext().filesDir
-    }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -163,7 +159,7 @@ class TakeAfterPictureFragment : Fragment() {
         fun newInstance() = TakeAfterPictureFragment()
 
         private const val TAG = "CameraXBasic"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
