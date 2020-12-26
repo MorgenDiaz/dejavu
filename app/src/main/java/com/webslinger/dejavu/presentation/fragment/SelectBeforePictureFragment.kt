@@ -1,6 +1,5 @@
-package com.webslinger.dejavu.presentation.main
+package com.webslinger.dejavu.presentation.fragment
 
-import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -13,7 +12,7 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.webslinger.dejavu.R
-import com.webslinger.dejavu.application.viewmodel.SelectBeforePictureViewModel
+import com.webslinger.dejavu.application.viewmodel.selectbeforepicture.SelectBeforePictureViewModel
 import com.webslinger.dejavu.databinding.SelectBeforePictureFragmentBinding
 
 class SelectBeforePictureFragment : Fragment() {

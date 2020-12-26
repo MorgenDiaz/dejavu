@@ -3,12 +3,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".presentation.main.SelectBeforePictureFragment">
+    tools:context=".presentation.fragment.SelectBeforePictureFragment">
 
     <data>
         <variable
             name="viewModel"
-            type="com.webslinger.dejavu.application.viewmodel.SelectBeforePictureViewModel" />
+            type="com.webslinger.dejavu.application.viewmodel.selectbeforepicture.SelectBeforePictureViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

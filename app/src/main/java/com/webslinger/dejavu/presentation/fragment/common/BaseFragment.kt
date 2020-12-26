@@ -1,8 +1,8 @@
-package com.webslinger.dejavu.application.viewmodel.common
+package com.webslinger.dejavu.presentation.fragment.common
 
 import androidx.fragment.app.Fragment
 import com.webslinger.dejavu.application.DejavuApplication
-import com.webslinger.dejavu.presentation.main.TakeAfterPictureFragment
+import com.webslinger.dejavu.presentation.fragment.TakeAfterPictureFragment
 
 abstract class BaseFragment: Fragment() {
     private val applicationComponent by lazy{

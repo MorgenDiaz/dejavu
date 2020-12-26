@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import com.webslinger.dejavu.application.infrastructure.PhotoOutputDirectoryProvider
 import com.webslinger.dejavu.application.usecase.TakePictureUseCase
-import com.webslinger.dejavu.application.viewmodel.TakeAfterPictureViewModelFactory
+import com.webslinger.dejavu.application.viewmodel.takeafterpicture.TakeAfterPictureViewModelFactory
 import com.webslinger.dejavu.domain.ICamera
 import dagger.Module
 import dagger.Provides
-import java.util.concurrent.Executor
 
 @Module
 @TakeAfterPhotoScope
@@ -18,7 +17,7 @@ class TakeAfterPictureViewModelFactoryModule {
         takePictureUseCase: TakePictureUseCase,
         context: Context,
         camera: ICamera
-    ): TakeAfterPictureViewModelFactory{
+    ): TakeAfterPictureViewModelFactory {
         return TakeAfterPictureViewModelFactory(
             takePictureUseCase,
             PhotoOutputDirectoryProvider(context),

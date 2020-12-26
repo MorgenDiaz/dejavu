@@ -1,7 +1,6 @@
-package com.webslinger.dejavu.application.viewmodel
+package com.webslinger.dejavu.application.viewmodel.selectbeforepicture
 
 import android.content.Intent
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.lifecycle.ViewModel
 
 

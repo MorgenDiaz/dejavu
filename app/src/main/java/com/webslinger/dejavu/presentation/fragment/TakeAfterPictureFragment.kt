@@ -1,4 +1,4 @@
-package com.webslinger.dejavu.presentation.main
+package com.webslinger.dejavu.presentation.fragment
 
 
 import android.Manifest
@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +16,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.webslinger.dejavu.R
-import com.webslinger.dejavu.application.DejavuApplication
-import com.webslinger.dejavu.application.viewmodel.TakeAfterPictureViewModel
-import com.webslinger.dejavu.application.viewmodel.TakeAfterPictureViewModelFactory
-import com.webslinger.dejavu.application.viewmodel.common.BaseFragment
+import com.webslinger.dejavu.application.viewmodel.takeafterpicture.TakeAfterPictureViewModel
+import com.webslinger.dejavu.application.viewmodel.takeafterpicture.TakeAfterPictureViewModelFactory
+import com.webslinger.dejavu.presentation.fragment.common.BaseFragment
 import com.webslinger.dejavu.databinding.TakeAfterPictureFragmentBinding
 import javax.inject.Inject
 

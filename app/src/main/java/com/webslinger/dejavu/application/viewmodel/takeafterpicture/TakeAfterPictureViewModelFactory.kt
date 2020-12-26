@@ -1,4 +1,4 @@
-package com.webslinger.dejavu.application.viewmodel
+package com.webslinger.dejavu.application.viewmodel.takeafterpicture
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
