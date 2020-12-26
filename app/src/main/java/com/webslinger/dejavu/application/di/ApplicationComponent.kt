@@ -11,15 +11,16 @@ import javax.inject.Singleton
     modules = [
         ApplicationModule::class,
         CameraModule::class,
+        TakeAfterPictureViewModelFactoryModule::class,
         TakePictureUseCaseModule::class,
-        TakeAfterPictureViewModelFactoryModule::class
     ]
 )
+@Singleton
 interface ApplicationComponent {
     fun getContext(): Context
 
     @Singleton
     fun getCamera(): ICamera
 
-    fun getTakeAfterPictureViewModelFactory(): TakeAfterPictureViewModelFactory
+    fun takeAfterPictureComponent(): TakeAfterPictureComponent
 }
