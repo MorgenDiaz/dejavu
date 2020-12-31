@@ -19,7 +19,8 @@ class TakeAfterPictureViewModelFactory(
                 takePictureUseCase,
                 photoOutputDirectoryProvider,
                 camera,
-                executor
+                executor,
+
                 ) as T
         }else{
             throw Error("Invalid viewmodel class")

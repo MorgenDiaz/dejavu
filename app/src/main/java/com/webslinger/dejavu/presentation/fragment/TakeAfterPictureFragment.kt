@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.webslinger.dejavu.R
 import com.webslinger.dejavu.application.viewmodel.takeafterpicture.TakeAfterPictureViewModel
@@ -39,6 +39,7 @@ class TakeAfterPictureFragment : BaseFragment() {
             container,
             false
         )
+
         return dataBinding.root
     }
 
@@ -51,9 +52,13 @@ class TakeAfterPictureFragment : BaseFragment() {
             viewModelFactory
         ).get(TakeAfterPictureViewModel::class.java)
 
+        dataBinding.viewModel = viewModel
+        dataBinding.lifecycleOwner = this
+
         loadBeforePicture()
         checkCameraPermissions()
         bindCameraCaptureButton()
+        bindOnPhotoCaptured()
     }
 
     private fun loadBeforePicture() {
@@ -64,13 +69,11 @@ class TakeAfterPictureFragment : BaseFragment() {
                 .load(beforePictureUri)
                 .into(dataBinding.beforePictureOverlay)
         }
-
-        dataBinding.beforePictureOverlay.imageAlpha = 70
     }
 
     private fun checkCameraPermissions() {
         if (allPermissionsGranted()) {
-            viewModel.startCameraPreview(this, dataBinding.viewFinder.surfaceProvider)
+            viewModel.startCameraPreview(viewLifecycleOwner, dataBinding.viewFinder.surfaceProvider)
         } else {
             ActivityCompat.requestPermissions(
                 requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
@@ -84,16 +87,23 @@ class TakeAfterPictureFragment : BaseFragment() {
         }
     }
 
+    private fun bindOnPhotoCaptured(){
+        viewModel.photoUri.observe(viewLifecycleOwner, Observer {
+            Toast.makeText(requireContext(), "Photo capture successful.", Toast.LENGTH_LONG).show()
+            viewModel.navigateBack(screenNavigator)
+        })
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults:
         IntArray
     ) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
-                viewModel.startCameraPreview(this, dataBinding.viewFinder.surfaceProvider)
+                viewModel.startCameraPreview(viewLifecycleOwner, dataBinding.viewFinder.surfaceProvider)
             } else {
                 showPermissionsNotGrantedMessage()
-                findNavController().popBackStack()
+                viewModel.navigateBack(screenNavigator)
             }
         }
     }

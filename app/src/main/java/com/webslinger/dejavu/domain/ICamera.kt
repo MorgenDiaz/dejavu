@@ -11,9 +11,12 @@ interface ICamera {
         lifeCycleOwner: LifecycleOwner,
         previewSurface: Preview.SurfaceProvider
     )
+
     fun takePhoto(
         outputOptions: ImageCapture.OutputFileOptions,
         executor: Executor,
         onImageSavedCallback: ImageCapture.OnImageSavedCallback
     )
+
+    fun stop()
 }

@@ -18,7 +18,7 @@ class CameraModule {
     @Singleton
     fun providesCamera(context: Context): ICamera{
         return DefaultCamera(
-            ProcessCameraProvider.getInstance(context),
+            ProcessCameraProvider.getInstance(context.applicationContext),
             DefaultPreviewConfiguration(),
             DefaultImageCaptureConfiguration(),
         )

@@ -2,4 +2,8 @@
     <string name="app_name">Dejavu</string>
     <string name="select_before_picture_prompt">Please select a before picture</string>
     <string name="select_before_picture">Select picture from gallery</string>
+    <string name="opac_up">Opac +</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="opac_down">Opac -</string>
+    <string name="before_image_stencil_overlay">Before image stencile overlay.</string>
 </resources>

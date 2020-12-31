@@ -9,6 +9,9 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.webslinger.dejavu.domain.ICamera
 import com.webslinger.dejavu.domain.IImageCaptureConfiguration
 import com.webslinger.dejavu.domain.IPreviewConfiguration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.Executor
 
@@ -65,5 +68,9 @@ class DefaultCamera(
             executor,
             onImageSavedCallback
         )
+    }
+
+    override fun stop() {
+        cameraProvider.unbindAll()
     }
 }

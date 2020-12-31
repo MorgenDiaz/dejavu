@@ -1,4 +1,9 @@
 package com.webslinger.dejavu.application.viewmodel.common
 
-class ScreenNavigator {
+import androidx.navigation.NavController
+
+class ScreenNavigator(private val navigationController: NavController){
+    fun navigateBack(){
+        navigationController.popBackStack()
+    }
 }

@@ -13,11 +13,18 @@ import java.io.File
 class TakePictureUseCase(
     private val context: Context,
     ){
+
+    interface OnImageCapturedCallback{
+        fun onImageCaptureSuccess(photoUri: Uri)
+        fun onImageCaptureFailure(imageCaptureException: ImageCaptureException)
+    }
+
     fun execute(
-        camera: ICamera, photoFile: File,
-    ): Uri
+        camera: ICamera,
+        photoFile: File,
+        onImageCapturedCallback: OnImageCapturedCallback
+    )
     {
-        var savedUri = Uri.EMPTY
 
         camera.takePhoto(
             ImageCapture.OutputFileOptions.Builder(photoFile).build(),
@@ -26,17 +33,15 @@ class TakePictureUseCase(
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Timber.e(exc, "Photo capture failed: ${exc.message}")
-                    throw exc
+                    onImageCapturedCallback.onImageCaptureFailure(exc)
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    savedUri = Uri.fromFile(photoFile)
                     savePhoto(photoFile)
+                    onImageCapturedCallback.onImageCaptureSuccess(Uri.fromFile(photoFile))
                 }
             }
         )
-
-        return savedUri
     }
 
     private fun savePhoto(photoFile: File) {
